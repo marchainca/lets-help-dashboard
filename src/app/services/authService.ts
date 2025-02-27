@@ -1,0 +1,33 @@
+import {LoginResponse} from "../interfaces/interfaces";
+import CryptoJS from 'crypto-js'; 
+
+  
+/**
+ * Función que realiza la llamada al backend para hacer login
+ * @param email - Correo electrónico ingresado por el usuario
+ * @param password - Contraseña ingresada por el usuario
+ * @returns Objeto con la respuesta del servidor (token y datos de usuario)
+ */
+export async function loginRequest(
+email: string,
+password: string
+): Promise<LoginResponse> {
+    try {
+        const hashPassword = CryptoJS.SHA256(password).toString();
+        const response = await fetch('http://192.168.1.33:3000/letsHelp/Colombia/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, hashPassword }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error en la respuesta del servidor: ${response.status}`);
+        }
+
+        const data: LoginResponse = await response.json();
+        return data;
+    } catch (error: any) {
+        throw new Error(error.message || 'Error al realizar login');
+    }
+}
+  
