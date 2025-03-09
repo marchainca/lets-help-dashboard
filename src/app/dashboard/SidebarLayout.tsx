@@ -1,95 +1,182 @@
 'use client';
 
-import React from 'react';
-import { Box, Typography, Divider, Link as MuiLink } from '@mui/material';
-import { LanguageSwitcher } from '@/app/components/LanguageSwitcher';
-import NextLink from 'next/link';
+import React, { useState } from 'react';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  Drawer,
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Box,
+  Divider,
+  Avatar
+} from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import HomeIcon from '@mui/icons-material/Home';
+import SettingsIcon from '@mui/icons-material/Settings';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import ExtensionIcon from '@mui/icons-material/Extension';
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
+import AssessmentIcon from '@mui/icons-material/Assessment';
+import LogoutIcon from '@mui/icons-material/Logout';
+import Link from 'next/link';
 
-export default function SidebarLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}>
-      {/* Barra superior azul */}
-      <Box
-        sx={{
-          width: '100%',
-          backgroundColor: '#1976d2', // Azul Material UI
-          color: '#fff',
-          padding: '0.75rem 1rem',
-        }}
-      >
-        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-          Panel de Inicio
+const drawerWidth = 240;
+
+// Altura estándar del AppBar en Material UI (por defecto ~64px en pantallas desktop)
+const appBarHeight = 64;
+
+interface SidebarLayoutProps {
+  children: React.ReactNode;
+}
+
+export default function SidebarLayout({ children }: SidebarLayoutProps) {
+  const [open, setOpen] = useState(false);
+
+  // Alterna el estado de apertura del Drawer (menú)
+  const handleDrawerToggle = () => {
+    setOpen(!open);
+  };
+
+  // Contenido del Drawer (menú lateral)
+  const drawerContent = (
+    <Box
+      sx={{
+        width: drawerWidth,
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+      }}
+    >
+      {/* Nombre o Branding */}
+      <Box sx={{ p: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Avatar alt="John Restrepo" src="" />
+        <Typography variant="body1" fontWeight="bold">
+          John Restrepo
         </Typography>
       </Box>
 
-      <Box sx={{ display: 'flex', flex: 1 }}>
-        {/* Barra lateral (blanca) */}
-        <Box
-          sx={{
-            width: 240,
-            backgroundColor: '#fff',
-            borderRight: '1px solid #ddd',
-            display: 'flex',
-            flexDirection: 'column',
-            p: 2,
-          }}
-        >
-          {/* Título o branding */}
-          <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2 }}>
-            Let&apos;s Help
-          </Typography>
+      <Divider />
 
-          {/* Menú lateral */}
-          <Box sx={{ flexGrow: 1 }}>
-            <SidebarLink href="/dashboard" label="Inicio" />
-            <SidebarLink href="/dashboard/profile" label="Perfil" />
-          </Box>
+      <List sx={{ flexGrow: 1 }}>
+        {/* Item 1 */}
+        <ListItemButton component={Link} href="/dashboard">
+          <ListItemIcon>
+            <HomeIcon />
+          </ListItemIcon>
+          <ListItemText primary="Inicio" />
+        </ListItemButton>
 
-          {/* Selector de idioma */}
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="subtitle2">Idioma:</Typography>
-            <LanguageSwitcher />
-          </Box>
+        {/* Crear Programa */}
+        <ListItemButton component={Link} href="/dashboard/create-program">
+          <ListItemIcon>
+            <AddBoxIcon />
+          </ListItemIcon>
+          <ListItemText primary="Crear Programa" />
+        </ListItemButton>
 
-          <Divider sx={{ mb: 2 }} />
+        {/* Crear Subprograma */}
+        <ListItemButton component={Link} href="/dashboard/create-subprogram">
+          <ListItemIcon>
+            <ExtensionIcon />
+          </ListItemIcon>
+          <ListItemText primary="Crear Subprograma" />
+        </ListItemButton>
 
-          {/* Salir */}
-          <Box>
-            <Typography
-              variant="body1"
-              sx={{ color: 'red', cursor: 'pointer' }}
-              // onClick={() => {/* lógica de logout */}}
-            >
-              Salir
-            </Typography>
-          </Box>
-        </Box>
+        {/* Crear Actividad */}
+        <ListItemButton component={Link} href="/dashboard/create-activity">
+          <ListItemIcon>
+            <TaskAltIcon />
+          </ListItemIcon>
+          <ListItemText primary="Crear Actividad" />
+        </ListItemButton>
 
-        {/* Contenido (fondo gris claro) */}
-        <Box sx={{ flexGrow: 1, backgroundColor: '#f5f5f5', p: 3 }}>
-          {children}
-        </Box>
+        {/* Reportes */}
+        <ListItemButton component={Link} href="/dashboard/reports">
+          <ListItemIcon>
+            <AssessmentIcon />
+          </ListItemIcon>
+          <ListItemText primary="Reportes" />
+        </ListItemButton>
+
+        <ListItemButton>
+          <ListItemIcon>
+            <SettingsIcon />
+          </ListItemIcon>
+          <ListItemText primary="Configuración" />
+        </ListItemButton>
+
+        <ListItemButton>
+          <ListItemIcon>
+            <LogoutIcon />
+          </ListItemIcon>
+          <ListItemText primary="Cerrar Sesión" />
+        </ListItemButton>
+
+      </List>
+
+      <Divider />
+
+      {/* Sección final, por ejemplo para botón Salir */}
+      <Box sx={{ p: 2 }}>
+        <Typography sx={{ color: 'red', cursor: 'pointer' }}>
+          Salir
+        </Typography>
       </Box>
     </Box>
   );
-}
 
-// Pequeño helper para los enlaces del sidebar
-function SidebarLink({ href, label }: { href: string; label: string }) {
   return (
-    <MuiLink
-      component={NextLink}
-      href={href}
-      variant="body1"
-      underline="none"
-      sx={{
-        display: 'block',
-        color: 'inherit',
-        py: 1,
-        '&:hover': { textDecoration: 'underline' },
-      }}
-    >
-      {label}
-    </MuiLink>
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      {/* Barra superior fija */}
+      <AppBar position="fixed">
+        <Toolbar>
+          {/* Botón tipo hamburguesa para abrir/cerrar el Drawer */}
+          <IconButton
+            color="inherit"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2 }}
+          >
+            <MenuIcon />
+          </IconButton>
+
+          <Typography variant="h6" sx={{ flexGrow: 1 }}>
+            Let&apos;s Help Colombia
+          </Typography>
+        </Toolbar>
+      </AppBar>
+
+      {/* Drawer lateral (hamburguesa) */}
+      <Drawer
+        open={open}
+        onClose={handleDrawerToggle}
+        sx={{
+          '& .MuiDrawer-paper': {
+            marginTop: `${appBarHeight}px`,
+          },
+        }}
+        ModalProps={{ keepMounted: true }}
+      >
+        {drawerContent}
+      </Drawer>
+
+      {/* Contenido principal con margen arriba + scroll */}
+      <Box
+        sx={{
+          flexGrow: 1,
+          marginTop: `${appBarHeight}px`,
+          height: `calc(100vh - ${appBarHeight}px)`,
+          overflow: 'auto', // Hace que el contenido sea scrollable
+          p: 2,
+        }}
+      >
+        {children}
+      </Box>
+    </Box>
   );
 }

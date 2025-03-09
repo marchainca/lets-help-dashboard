@@ -1,86 +1,264 @@
 'use client';
 
-import React from 'react';
-import { Box, Typography, Grid, Card, CardActionArea, CardContent } from '@mui/material';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import React, { useState } from 'react';
+import {
+  Box,
+  Button,
+  Typography,
+  Paper,
+  Pagination,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  IconButton
+} from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import SidebarLayout from './SidebarLayout';
 
+// Ejemplo de datos. Acomoda tus campos según tus necesidades.
+const rowsData = [
+  {
+    tema: 'Taller hábitos y estilos de vida saludable-prevención enfermedades cardiovasculares mediante una alimentación balanceada',
+    s1Actividad: '2/1',
+    s1Asistencia: '3/1',
+    s2Actividad: '4/1',
+    s2Asistencia: '5/1',
+    s3Actividad: '6/1',
+    s3Asistencia: '7/1',
+    s4Actividad: '8/1',
+    s4Asistencia: '9/1'
+  },
+  {
+    tema: 'Gestión citas médicas...',
+    s1Actividad: '3/1',
+    s1Asistencia: '4/1',
+    s2Actividad: '5/1',
+    s2Asistencia: '6/1',
+    s3Actividad: '7/1',
+    s3Asistencia: '8/1',
+    s4Actividad: '9/1',
+    s4Asistencia: '10/1'
+  },
+  {
+    tema: 'Actividades de prevención...',
+    s1Actividad: '4/1',
+    s1Asistencia: '5/1',
+    s2Actividad: '6/1',
+    s2Asistencia: '7/1',
+    s3Actividad: '8/1',
+    s3Asistencia: '9/1',
+    s4Actividad: '10/1',
+    s4Asistencia: '11/1'
+  },
+  // ...etc
+];
+
 export default function DashboardPage() {
-  const userName = 'john_restrepo';
-
-  const today = new Date();
-  const formattedDate = format(today, 'EEEE, d \'de\' MMMM', {
-    locale: es, // Ajustar según tu i18n actual
-  });
-
-  // Saludo según la hora
-  const hour = today.getHours();
-  let greeting = 'Buenos días';
-  if (hour >= 12 && hour < 18) greeting = 'Buenas tardes';
-  else if (hour >= 18) greeting = 'Buenas noches';
+  // Paginación (ejemplo)
+  const [page, setPage] = useState(1);
+  const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+    // Cargar datos de la página "value" si es necesario
+  };
 
   return (
     <SidebarLayout>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3, flexWrap: 'wrap' }}>
-        {/* Encabezado lado izquierdo */}
-        <Box>
-          <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
-            Inicio
-          </Typography>
-          <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-            Aquí podrás gestionar tus programas, subprogramas y actividades.
-          </Typography>
-        </Box>
-
-        {/* Encabezado lado derecho: saludo y fecha */}
-        <Box sx={{ textAlign: 'right', mt: { xs: 2, md: 0 } }}>
-          <Typography variant="subtitle1">
-            {greeting}, <strong>{userName}</strong>
-          </Typography>
-          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            {formattedDate}
-          </Typography>
-        </Box>
+      {/* Fila de botones de acciones */}
+      <Box
+        sx={{
+          display: 'flex',
+          gap: 2,
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          mb: 3,
+        }}
+      >
+        {/* <Button variant="contained" color="primary" sx={{ minWidth: 200, height: 60 }}>
+          Crear Programa
+        </Button>
+        <Button variant="contained" color="primary" sx={{ minWidth: 200, height: 60 }}>
+          Crear Subprograma
+        </Button>
+        <Button variant="contained" color="primary" sx={{ minWidth: 200, height: 60 }}>
+          Crear Actividad
+        </Button>
+        <Button variant="contained" color="primary" sx={{ minWidth: 200, height: 60 }}>
+          Reportes
+        </Button> */}
       </Box>
 
-      {/* Sección de tarjetas */}
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6} md={3}>
-          <DashboardCard title="Crear Programa" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <DashboardCard title="Crear Subprograma" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <DashboardCard title="Crear Actividad" />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <DashboardCard title="Ver Reportes" />
-        </Grid>
-      </Grid>
-    </SidebarLayout>
-  );
-}
+      {/* Títulos */}
+      <Typography variant="h4" fontWeight="bold" mb={1} sx={{ textAlign: 'center' }}>
+        Programa Familias Saludables
+      </Typography>
+      <Typography variant="h5" fontWeight="bold" mb={2}>
+        Subprograma Salud Financiera
+      </Typography>
+      <Typography variant="h6" mb={2}>
+        * Las actividades y asistencias se muestran de la forma: programadas / ejecutadas
+      </Typography>
 
-// Tarjeta reutilizable
-function DashboardCard({ title }: { title: string }) {
-  return (
-    <Card
-      sx={{
-        borderRadius: 2,
-        boxShadow: 2, // leve sombra
-        textAlign: 'center',
-        bgcolor: '#fff',
-      }}
-    >
-      <CardActionArea sx={{ minHeight: 100, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <CardContent>
-          <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-            {title}
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-    </Card>
+      {/* Tabla con la estructura de la imagen */}
+      <Paper sx={{ p: 2, overflow: 'auto' }}>
+        <TableContainer>
+          <Table>
+            {/* Fila superior: Título "Actividades - Asistentes Septiembre" ocupando todas las columnas */}
+            <TableHead>
+              <TableRow>
+                <TableCell
+                  colSpan={13} /* 1 col Tema + 4 semanas * 3 subcol = 13 */
+                  align="center"
+                  sx={{
+                    backgroundColor: '#29ABE2',
+                    color: '#fff',
+                    fontWeight: 'bold',
+                    fontSize: '1rem',
+                  }}
+                >
+                  Actividades - Asistentes Septiembre
+                </TableCell>
+              </TableRow>
+
+              {/* Fila agrupa "Tema" y las semanas */}
+              <TableRow>
+                {/* "Tema" abarca 2 filas (esta y la siguiente) */}
+                <TableCell
+                  rowSpan={2}
+                  sx={{
+                    fontWeight: 'bold',
+                    backgroundColor: '#f0f0f0', // Gris claro opcional
+                    width: 280,
+                  }}
+                >
+                  Descripción de la actividad
+                </TableCell>
+
+                {/* 4 grupos de semana, cada uno colSpan=3 */}
+                <TableCell
+                  colSpan={3}
+                  align="center"
+                  sx={{ backgroundColor: '#29ABE2', color: '#fff', fontWeight: 'bold' }}
+                >
+                  Semana 1
+                </TableCell>
+                <TableCell
+                  colSpan={3}
+                  align="center"
+                  sx={{ backgroundColor: '#29ABE2', color: '#fff', fontWeight: 'bold' }}
+                >
+                  Semana 2
+                </TableCell>
+                <TableCell
+                  colSpan={3}
+                  align="center"
+                  sx={{ backgroundColor: '#29ABE2', color: '#fff', fontWeight: 'bold' }}
+                >
+                  Semana 3
+                </TableCell>
+                <TableCell
+                  colSpan={3}
+                  align="center"
+                  sx={{ backgroundColor: '#29ABE2', color: '#fff', fontWeight: 'bold' }}
+                >
+                  Semana 4
+                </TableCell>
+              </TableRow>
+
+              {/* Subcolumnas de cada semana: Actividad, Asistencia, Editar */}
+              <TableRow>
+                {/* Semana 1 */}
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>
+                  Actividad<br />
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>
+                  Asistencia<br />
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>
+                  Editar
+                </TableCell>
+
+                {/* Semana 2 */}
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>
+                  Actividad<br />
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>
+                  Asistencia<br />
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>
+                  Editar
+                </TableCell>
+
+                {/* Semana 3 */}
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>
+                  Actividad<br />
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>
+                  Asistencia<br />
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>
+                  Editar
+                </TableCell>
+
+                {/* Semana 4 */}
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>
+                  Actividad<br />
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>
+                  Asistencia<br />
+                </TableCell>
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>
+                  Editar
+                </TableCell>
+              </TableRow>
+            </TableHead>
+
+            <TableBody>
+              {rowsData.map((row, idx) => (
+                <TableRow key={idx}>
+                  {/* Columna "Tema" */}
+                  <TableCell>{row.tema}</TableCell>
+
+                  {/* Semana 1 */}
+                  <TableCell align="center">{row.s1Actividad}</TableCell>
+                  <TableCell align="center">{row.s1Asistencia}</TableCell>
+                  <TableCell align="center">
+                    <IconButton><EditIcon /></IconButton>
+                  </TableCell>
+
+                  {/* Semana 2 */}
+                  <TableCell align="center">{row.s2Actividad}</TableCell>
+                  <TableCell align="center">{row.s2Asistencia}</TableCell>
+                  <TableCell align="center">
+                    <IconButton><EditIcon /></IconButton>
+                  </TableCell>
+
+                  {/* Semana 3 */}
+                  <TableCell align="center">{row.s3Actividad}</TableCell>
+                  <TableCell align="center">{row.s3Asistencia}</TableCell>
+                  <TableCell align="center">
+                    <IconButton><EditIcon /></IconButton>
+                  </TableCell>
+
+                  {/* Semana 4 */}
+                  <TableCell align="center">{row.s4Actividad}</TableCell>
+                  <TableCell align="center">{row.s4Asistencia}</TableCell>
+                  <TableCell align="center">
+                    <IconButton><EditIcon /></IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
+
+      {/* Paginación (opcional) */}
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+        <Pagination count={20} page={page} onChange={handlePageChange} />
+      </Box>
+    </SidebarLayout>
   );
 }
