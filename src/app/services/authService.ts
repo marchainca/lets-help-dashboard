@@ -17,16 +17,18 @@ password: string
         const response = await fetch('http://192.168.1.33:3000/letsHelp/Colombia/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, hashPassword }),
+            body: JSON.stringify({ email, password: hashPassword }),
         });
 
         if (!response.ok) {
+
             throw new Error(`Error en la respuesta del servidor: ${response.status}`);
         }
 
         const data: LoginResponse = await response.json();
         return data;
     } catch (error: any) {
+        console.log("Error en loginRequest: ", error.message || 'Error al realizar login' )
         throw new Error(error.message || 'Error al realizar login');
     }
 }

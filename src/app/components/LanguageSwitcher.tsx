@@ -1,17 +1,48 @@
-'use client';
+'use client'; 
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Select, MenuItem, SelectChangeEvent  } from '@mui/material';
 
-import React from 'react';
-import i18n from '@/i18n';
+export function LanguageSwitcher() {
+  const { i18n } = useTranslation();
+  // Estado local para guardar el idioma seleccionado
+  const [currentLang, setCurrentLang] = useState<string>(i18n.language);
 
-export default function LanguageSwitcher() {
-  const changeLanguage = (lng: string) => {
-    void i18n.changeLanguage(lng);
+  // Opciones de idioma para manejar en el dashboard
+  const availableLanguages = [
+    { code: 'en', label: 'English' },
+    { code: 'es', label: 'Español' },
+  ];
+
+  // revisar si hay un idioma almacenado en localStorage
+  useEffect(() => {
+    const storedLang = localStorage.getItem('lang');
+    if (storedLang && storedLang !== currentLang) {
+      setCurrentLang(storedLang);
+      i18n.changeLanguage(storedLang);
+    }
+  }, []);
+
+  // Handler para cambiar de idioma
+  const handleLanguageChange = (event: SelectChangeEvent<string>) => {
+    const newLang = event.target.value;
+    setCurrentLang(newLang);
+    i18n.changeLanguage(newLang);
+    localStorage.setItem('lang', newLang);
   };
 
   return (
-    <div style={{ display: 'flex', gap: '8px' }}>
-      <button onClick={() => changeLanguage('es')}>ES</button>
-      <button onClick={() => changeLanguage('en')}>EN</button>
-    </div>
+    <Select
+      value={currentLang}
+      onChange={handleLanguageChange}
+      size="small"
+      sx={{ marginLeft: 'auto', marginRight: '1rem' }} // estilos opcionales
+    >
+      {availableLanguages.map((lang) => (
+        <MenuItem key={lang.code} value={lang.code}>
+          {lang.label}
+        </MenuItem>
+      ))}
+    </Select>
   );
 }
