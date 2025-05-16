@@ -72,7 +72,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
         </ListItemButton>
 
         {/* Crear Programa */}
-        <ListItemButton component={Link} href="/dashboard/create-program">
+        <ListItemButton component={Link} href="/dashboard/create-programs">
           <ListItemIcon>
             <AddBoxIcon />
           </ListItemIcon>
