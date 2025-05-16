@@ -11,8 +11,8 @@ import {
   Box,
 } from '@mui/material';
 
-const TOKEN = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJvODU5ZHIxN0s0N2VFblJRc2diNyIsImVtYWlsIjoianVhbkBleGFtcGxlLmNvbSIsInJvbGVzIjoiQWRtaW4iLCJpYXQiOjE3NDIxNDM2MjF9.YsitldhlkNOvqt_NZxGph1uKEn23xvKE5yrLBm1gsCk'; // Ajusta tu token real
-const UPDATE_URL = 'http://192.168.56.1:3000/letsHelp/Colombia/activities/update-activity';
+const TOKEN = process.env.NEXT_PUBLIC_AUTH_TOKEN;
+const UPDATE_URL = `${process.env.NEXT_PUBLIC_ACTIVITIES_API_URL}${process.env.NEXT_PUBLIC_UPDATE_ACTIVITY_ENDPOINT}`;
 
 interface EditActivityModalProps {
   open: boolean;
