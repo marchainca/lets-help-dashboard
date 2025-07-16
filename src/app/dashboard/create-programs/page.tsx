@@ -26,7 +26,7 @@ interface IProgram {
 
 export default function CreateProgramsPage() {
   // Lista de programas existentes
-  /* const [programs, setPrograms] = useState<IProgram[]>([]); */
+  const [programs, setPrograms] = useState<IProgram[]>([]);
 
   // Estados para crear un nuevo programa
   const [newProgramName, setNewProgramName] = useState('');
@@ -67,7 +67,7 @@ export default function CreateProgramsPage() {
   }, []);
 
   // 1. Al montar, cargamos la lista de programas
-  /* useEffect(() => {
+  useEffect(() => {
     fetch(`${BASE_URL}/getPrograms/3514235900`, {
       method: 'POST',
       headers: {
@@ -92,7 +92,7 @@ export default function CreateProgramsPage() {
         console.error('Error al obtener programas existentes:', err);
         setPrograms([]);
       });
-  }, []); */
+  }, []);
 
   // 2. Crear Programa
   const handleCreateProgram = () => {
@@ -319,11 +319,11 @@ export default function CreateProgramsPage() {
               onChange={(e) => setSelectedProgramForSub(e.target.value)}
             >
               <MenuItem value="">Selecciona un programa</MenuItem>
-              {/* {programs.map((prog) => (
+              {programs.map((prog) => (
                 <MenuItem key={prog.id} value={prog.id}>
                   {prog.name}
                 </MenuItem>
-              ))} */}
+              ))}
             </Select>
 
             <TextField
