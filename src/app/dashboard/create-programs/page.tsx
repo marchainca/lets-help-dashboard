@@ -361,34 +361,48 @@ export default function CreateProgramsPage() {
               sx={{ mb: 2 }}
               displayEmpty
               value={selectedProgramForAct}
-              onChange={(e) => setSelectedProgramForAct(e.target.value)}
+              onChange={(e) => {
+                setSelectedProgramForAct(e.target.value);
+                setSelectedSubprogForAct(''); // Limpiar subprograma al cambiar programa
+              }}
             >
               <MenuItem value="">Selecciona un programa</MenuItem>
-              {/* {programs.map((prog) => (
+              {programs.map((prog) => (
                 <MenuItem key={prog.id} value={prog.id}>
                   {prog.name}
                 </MenuItem>
-              ))} */}
+              ))}
             </Select>
 
             {/* Seleccionar Subprograma */}
             {selectedProgramForAct && (
-              <Select
-                fullWidth
-                sx={{ mb: 2 }}
-                displayEmpty
-                value={selectedSubprogForAct}
-                onChange={(e) => setSelectedSubprogForAct(e.target.value)}
-              >
-                <MenuItem value="">Selecciona un subprograma</MenuItem>
-                {/* {programs
-                  .find((p) => p.id === selectedProgramForAct)
-                  ?.subprograms?.map((sp) => (
-                    <MenuItem key={sp.id} value={sp.id}>
-                      {sp.name}
-                    </MenuItem>
-                  ))} */}
-              </Select>
+              <>
+                <Select
+                  fullWidth
+                  sx={{ mb: 2 }}
+                  displayEmpty
+                  value={selectedSubprogForAct}
+                  onChange={(e) => setSelectedSubprogForAct(e.target.value)}
+                  disabled={
+                    !programs.find((p) => p.id === selectedProgramForAct)?.subprograms?.length
+                  }
+                >
+                  <MenuItem value="">Selecciona un subprograma</MenuItem>
+                  {programs
+                    .find((p) => p.id === selectedProgramForAct)
+                    ?.subprograms?.map((sp) => (
+                      <MenuItem key={sp.id} value={sp.id}>
+                        {sp.name}
+                      </MenuItem>
+                    ))}
+                </Select>
+                {/* Mensaje visual si no hay subprogramas */}
+                {programs.find((p) => p.id === selectedProgramForAct)?.subprograms?.length === 0 && (
+                  <Typography color="warning.main" variant="body2" sx={{ mb: 2 }}>
+                    El programa seleccionado no tiene subprogramas registrados.
+                  </Typography>
+                )}
+              </>
             )}
 
             {/* Datos de la Actividad */}
