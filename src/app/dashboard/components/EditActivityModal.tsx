@@ -11,7 +11,7 @@ import {
   Box,
 } from '@mui/material';
 
-const TOKEN = process.env.NEXT_PUBLIC_AUTH_TOKEN;
+const TOKEN = process.env.NEXT_PUBLIC_AUTH_TOKEN || '';
 const UPDATE_URL = `${process.env.NEXT_PUBLIC_ACTIVITIES_API_URL}${process.env.NEXT_PUBLIC_UPDATE_ACTIVITY_ENDPOINT}`;
 
 interface EditActivityModalProps {
@@ -74,7 +74,7 @@ export default function EditActivityModal(props: EditActivityModalProps) {
     fetch(UPDATE_URL, {
       method: 'PATCH',
       headers: {
-        Authorization: TOKEN,
+        'Authorization': TOKEN,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({

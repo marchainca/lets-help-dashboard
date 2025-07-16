@@ -24,6 +24,7 @@ import TaskAltIcon from '@mui/icons-material/TaskAlt';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const drawerWidth = 240;
 
@@ -36,6 +37,20 @@ interface SidebarLayoutProps {
 
 export default function SidebarLayout({ children }: SidebarLayoutProps) {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
+
+  // Función para cerrar sesión
+  const handleLogout = () => {
+    // Eliminar token y datos del usuario de localStorage
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('userData');
+      // Eliminar cookie de accessToken
+      document.cookie = 'accessToken=; Max-Age=0; path=/;';
+    }
+    // Redirigir al login
+    router.push('/login');
+  };
 
   // Alterna el estado de apertura del Drawer (menú)
   const handleDrawerToggle = () => {
@@ -110,7 +125,7 @@ export default function SidebarLayout({ children }: SidebarLayoutProps) {
           <ListItemText primary="Configuración" />
         </ListItemButton>
 
-        <ListItemButton>
+        <ListItemButton onClick={handleLogout}>
           <ListItemIcon>
             <LogoutIcon />
           </ListItemIcon>

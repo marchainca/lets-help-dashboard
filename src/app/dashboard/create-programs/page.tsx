@@ -46,7 +46,25 @@ export default function CreateProgramsPage() {
   const [actExecActivities, setActExecActivities] = useState<number>(0);
   const [actProjAttendees, setActProjAttendees] = useState<number>(0);
   const [actExecAttendees, setActExecAttendees] = useState<number>(0);
-  const [actResponsible, setActResponsible] = useState<string>('userId123');
+  const [actResponsible, setActResponsible] = useState<string>('');
+
+  // Al montar, obtener el idNumber del usuario de localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const userDataStr = localStorage.getItem('userData');
+      if (userDataStr) {
+        try {
+          const userData = JSON.parse(userDataStr);
+          if (userData && userData.idNumber) {
+            setActResponsible(userData.idNumber);
+          }
+        } catch (e) {
+          // Si hay error de parseo, dejar vacío
+          setActResponsible('');
+        }
+      }
+    }
+  }, []);
 
   // 1. Al montar, cargamos la lista de programas
   /* useEffect(() => {
@@ -87,6 +105,7 @@ export default function CreateProgramsPage() {
       body: JSON.stringify({
         name: newProgramName,
         description: newProgramDesc,
+        responsible: actResponsible,
       }),
     })
       .then(async (res) => {
